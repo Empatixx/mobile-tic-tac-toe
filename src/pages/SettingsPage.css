@@ -1,0 +1,12 @@
+.large-toggle .toggle-inner {
+    width: 50px; /* Adjust as needed */
+    height: 26px; /* Adjust as needed */
+    border-radius: 20px; /* Adjust as needed */
+}
+
+.large-toggle .toggle-inner:before {
+    width: 24px; /* Adjust as needed */
+    height: 24px; /* Adjust as needed */
+    top: 1px; /* Adjust as needed */
+    left: 1px; /* Adjust as needed */
+}

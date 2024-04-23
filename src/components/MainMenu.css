@@ -1,0 +1,17 @@
+.title {
+    font-size: 3em;
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
+    color: purple;
+    background: -webkit-linear-gradient(purple, pink);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+    font-weight: bold; /* Add this line */
+}
+.ion-padding {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100%;
+}
