@@ -14,9 +14,9 @@ import {
     IonGrid,
     IonRow,
     IonCol, IonButtons, IonBackButton,
-    IonActionSheet, IonModal, IonList, IonItem, IonLabel, createGesture,
+    IonActionSheet, IonModal, IonList, IonItem, IonLabel, createGesture, IonFab, IonFabButton,
 } from '@ionic/react';
-import {trophy, thumbsDown , desktopOutline, beer} from "ionicons/icons";
+import {trophy, thumbsDown, desktopOutline, beer, downloadOutline} from "ionicons/icons";
 import {IonButton} from "@ionic/react";
 import {
     Chart as ChartJS,
@@ -129,6 +129,18 @@ const HistoryPage: React.FC = () => {
         };
         
     }, []);
+    const handleExportToJson = () => {
+        const dataStr = JSON.stringify(gameHistories);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'game-histories.json';
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+    };
     return (
         <IonPage>
             <IonHeader>
@@ -138,8 +150,8 @@ const HistoryPage: React.FC = () => {
                     </IonButtons>
                     <IonTitle>Settings</IonTitle>
                     <IonButtons slot="end">
-                        <IonButton onClick={() => setShowModal(true)}>
-                            <IonIcon icon={desktopOutline} />
+                        <IonButton onClick={handleExportToJson}>
+                            <IonIcon icon={downloadOutline} />
                         </IonButton>
                     </IonButtons>
                 </IonToolbar>
@@ -172,6 +184,11 @@ const HistoryPage: React.FC = () => {
                         </IonGrid>
                     </IonCard>
                 ))}
+                <IonFab vertical="bottom" horizontal="end" slot="fixed">
+                    <IonFabButton onClick={() => setShowModal(true)}>
+                        <IonIcon icon={desktopOutline} />
+                    </IonFabButton>
+                </IonFab>
                 <IonModal
                     isOpen={showModal}
                     initialBreakpoint={0.5}
