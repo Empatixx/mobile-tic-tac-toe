@@ -16,7 +16,7 @@ import {
     IonCol, IonButtons, IonBackButton,
     IonActionSheet, IonModal, IonList, IonItem, IonLabel, createGesture,
 } from '@ionic/react';
-import {trophy, thumbsDown , desktopOutline} from "ionicons/icons";
+import {trophy, thumbsDown , desktopOutline, beer} from "ionicons/icons";
 import {IonButton} from "@ionic/react";
 import {
     Chart as ChartJS,
@@ -43,11 +43,11 @@ ChartJS.register(
 );
 
 
-type GameHistory = {
+export type GameHistory = {
     playerName: string;
-    result: 'Won' | 'Lost';
+    result: 'Won' | 'Lost' | 'Draw';
     rounds: number;
-    timestamp: Date;
+    timestamp: Date | string;
 };
 
 type Dataset = {
@@ -61,35 +61,41 @@ type ChartData = {
     labels: string[];
     datasets: Dataset[];
 };
-const gameHistories: GameHistory[] = [
-    {playerName: 'Alice', result: 'Won', rounds: 3, timestamp: new Date()},
-    {playerName: 'Bob', result: 'Lost', rounds: 5, timestamp: new Date()},
-    // Add more histories here
-];
 
 const HistoryPage: React.FC = () => {
     const [showModal, setShowModal] = useState(false);
+    const [gameHistories, setGameHistories] = useState<GameHistory[]>([]);
     const [data, setData] = useState<ChartData>({
         labels: [],
         datasets: [
             { label: 'Wins', data: [], borderColor: 'green', backgroundColor: 'rgba(0, 255, 0, 0.5)' },
-            { label: 'Losses', data: [], borderColor: 'red', backgroundColor: 'rgba(255, 0, 0, 0.5)' }]
+            { label: 'Losses', data: [], borderColor: 'red', backgroundColor: 'rgba(255, 0, 0, 0.5)' },
+            { label: 'Draws', data: [], borderColor: 'blue', backgroundColor: 'rgba(0, 0, 255, 0.5)' }]
     })
-
-    useEffect(() => {
+    function updateChartData(gameHistories: GameHistory[]) {
         const last7Days = [...Array(7).keys()].map(days => new Date(Date.now() - 86400000 * days));
         const labels = last7Days.map(date => date.toLocaleDateString());
 
         // Calculate wins and losses for each day
         const wins = last7Days.map(date =>
-            gameHistories.filter(game =>
-                game.timestamp.toDateString() === date.toDateString() && game.result === 'Won'
-            ).length
+            gameHistories.filter(game =>  {
+                const date1 = new Date(game.timestamp);
+                return date1.getDay() === date.getDay() && date1.getMonth() === date.getMonth() && date1.getFullYear() === date.getFullYear() && game.result === 'Won'
+            }).length
         );
         const losses = last7Days.map(date =>
-            gameHistories.filter(game =>
-                game.timestamp.toDateString() === date.toDateString() && game.result === 'Lost'
-            ).length
+            gameHistories.filter(game => {
+                const date1 = new Date(game.timestamp);
+                console.log('date1', date1);
+                console.log('date', date);
+                return date1.getDay() === date.getDay() && date1.getMonth() === date.getMonth() && date1.getFullYear() === date.getFullYear() && game.result === 'Lost'
+            }).length
+        );
+        const draws = last7Days.map(date =>
+            gameHistories.filter(game => {
+                const date1 = new Date(game.timestamp);
+                return date1.getDay() === date.getDay() && date1.getMonth() === date.getMonth() && date1.getFullYear() === date.getFullYear() && game.result === 'Draw'
+            }).length
         );
 
         // Update chart data
@@ -97,9 +103,31 @@ const HistoryPage: React.FC = () => {
             labels: labels,
             datasets: [
                 { ...prevData.datasets[0], data: wins },
-                { ...prevData.datasets[1], data: losses }
+                { ...prevData.datasets[1], data: losses },
+                { ...prevData.datasets[2], data: draws }
             ]
         }));
+    }
+    useEffect(() => {
+        const loadHistories = () => {
+            const storedHistories = localStorage.getItem('gameHistories');
+            const gameHistories: GameHistory[] = storedHistories ? JSON.parse(storedHistories) : [];
+            setGameHistories(gameHistories);
+            updateChartData(gameHistories);
+        };
+        loadHistories();
+        const handleStorageChange = (event: StorageEvent) => {
+            if (event.key === 'gameHistories') {
+                const newHistories = event.newValue ? JSON.parse(event.newValue) : [];
+                setGameHistories(newHistories);
+                updateChartData(newHistories);
+            }
+        };
+        window.addEventListener('storage', handleStorageChange);
+        return () => {
+            window.removeEventListener('storage', handleStorageChange);
+        };
+        
     }, []);
     return (
         <IonPage>
@@ -131,12 +159,12 @@ const HistoryPage: React.FC = () => {
                                     <IonCardContent>
                                         Name: {history.playerName} <br/>
                                         Total Rounds: {history.rounds} <br/>
-                                        Date: {Intl.DateTimeFormat('cs-CZ').format(history.timestamp)}
+                                        Date: {Intl.DateTimeFormat('cs-CZ').format(new Date(history.timestamp))}
                                     </IonCardContent>
                                 </IonCol>
                                 <IonCol size="3" className="ion-text-right">
                                     <IonIcon
-                                        icon={history.result === 'Won' ? trophy : thumbsDown}
+                                        icon={history.result === 'Won' ? trophy : history.result === 'Lost' ? thumbsDown : beer}
                                         style={{fontSize: '48px'}}
                                     />
                                 </IonCol>
