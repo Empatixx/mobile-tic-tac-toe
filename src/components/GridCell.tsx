@@ -6,7 +6,6 @@ import TacIcon from "./TacIcon";
 
 type GridCellProps = {
     onAction: () => void;
-    onGameOver: (winner: 'X' | 'O' | 'draw') => void;
     rowIndex: number;
     colIndex: number;
     cellValue: 'X' | 'O' | null;
@@ -14,7 +13,7 @@ type GridCellProps = {
 };
 
 // Update GridCell with new props
-const GridCell: React.FC<GridCellProps> = ({ onAction, onGameOver, rowIndex, colIndex, cellValue, setCellValue }) => {
+const GridCell: React.FC<GridCellProps> = ({ onAction, rowIndex, colIndex, cellValue, setCellValue }) => {
     const toggleIcon = (): void => {
         if (cellValue === null) {
             setCellValue(rowIndex, colIndex, 'X'); // Assume 'X' is the current player for simplicity
@@ -26,9 +25,11 @@ const GridCell: React.FC<GridCellProps> = ({ onAction, onGameOver, rowIndex, col
         <IonCol onClick={toggleIcon}>
             <div className="grid-cell">
                 {
-                    cellValue === 'X' ? <TicIcon /> : cellValue === 'O' ? <TacIcon /> : null
+                    cellValue === 'X' ? <TicIcon style={{ fontSize: '48px' }}/> : cellValue === 'O' ? <TacIcon style={{ fontSize: '48px' }} /> : null
                 }
             </div>
         </IonCol>
     );
 };
+
+export default GridCell;

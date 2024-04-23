@@ -20,8 +20,9 @@ const StartPage: React.FC = () => {
     const incrementRound = (): void => {
         setRound(prevRound => prevRound + 1);
     };
-    const handleGameResult = (result: 'win' | 'lose' | 'draw') => {
-        console.log(result);
+    const handleGameResult = (state: 'Loss' | 'Win' | 'Draw') => {
+        // Handle the game result here
+        console.log(`Game ended with ${state}`);
     }
 
     return (
@@ -35,7 +36,7 @@ const StartPage: React.FC = () => {
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-                <GameGrid onAction={incrementRound} onGameResult={handleGameResult}/>
+                <GameGrid onAction={incrementRound} onGameOver={handleGameResult}/>
             </IonContent>
             <IonFooter>
                 <IonToolbar style={{ height: '200px' }}>
