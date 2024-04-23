@@ -152,7 +152,7 @@ const HistoryPage: React.FC = () => {
                                 <IonCol size="9">
                                     <IonCardHeader>
                                         <IonCardTitle
-                                            style={{color: history.result === 'Lost' ? '#d32f2f' : '#2e7d32'}}>
+                                            style={{color: history.result === 'Lost' ? '#d32f2f' : history.result  === 'Won' ? '#2e7d32' : 'orange'}}>
                                             {history.result}
                                         </IonCardTitle>
                                     </IonCardHeader>

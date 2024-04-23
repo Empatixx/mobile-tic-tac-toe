@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
     IonPage,
     IonHeader,
@@ -7,28 +7,51 @@ import {
     IonContent,
     IonFooter,
     IonIcon,
-    IonText, IonButtons, IonBackButton, IonCol, IonRow, IonGrid, IonItem, IonCard
+    IonText, IonButtons, IonBackButton, IonCol, IonRow, IonGrid, IonItem, IonCard, IonButton
 } from '@ionic/react';
 import TacIcon from "../components/TacIcon";
 import TicIcon from "../components/TicIcon";
 import GameGrid from "../components/GameGrid";
-import { GameHistory } from "./HistoryPage";
+import {GameHistory} from "./HistoryPage";
 import useTicTacToeLogic from "../logic/TicTacToeLogic";
 import useAiPlayer from "../logic/AiPlayer";
 import GameResultModal from "../components/GameResultModal";
+
+const applauseSound = new Audio('./win.mp3');
 
 const StartPage: React.FC = () => {
     const [round, setRound] = useState<number>(1);
     const [showModal, setShowModal] = useState<boolean>(false);
     const [result, setResult] = useState<'Win' | 'Loss' | 'Draw'>('Draw');
+    const [gameEnded, setGameEnded] = useState<boolean>(false);
     const gridSize = 5;
-    const { grid, setCellValue, isPlayerTurn, setIsPlayerTurn, checkIfGameEnded, winCells, updateWinCells } = useTicTacToeLogic(gridSize);
-    const { findBestMove } = useAiPlayer(grid, gridSize, checkIfGameEnded);
+    const {
+        grid,
+        setCellValue,
+        isPlayerTurn,
+        setIsPlayerTurn,
+        checkIfGameEnded,
+        winCells,
+        updateWinCells,
+        resetGameGrid
+    } = useTicTacToeLogic(gridSize);
+    const {findBestMove} = useAiPlayer(grid, gridSize, checkIfGameEnded);
 
     const incrementRound = (): void => {
         setRound(prevRound => prevRound + 1);
     };
-
+    const resetGame = (): void => {
+        setRound(1);
+        setShowModal(false);
+        setGameEnded(false);
+        setResult('Draw'); // Or however you initialize this state
+        setIsPlayerTurn(true); // Or however you determine the starting player
+        resetGameGrid(); // Call the reset function from your game logic hook
+        if (!applauseSound.paused) {
+            applauseSound.pause();
+            applauseSound.currentTime = 0;
+        }
+    };
     const handleGameResult = (state: 'Loss' | 'Win' | 'Draw') => {
         const history: GameHistory = {
             playerName: 'Player 1',
@@ -43,8 +66,11 @@ const StartPage: React.FC = () => {
 
         setResult(state); // Set the result
         setShowModal(true); // Show the modal
-
+        setGameEnded(true); // Set the game as ended
         updateWinCells(grid); // Update the win cells
+        if (state === 'Win' || state === 'Draw') {
+            applauseSound.play();
+        }
     };
 
     return (
@@ -52,7 +78,7 @@ const StartPage: React.FC = () => {
             <IonHeader>
                 <IonToolbar color="success">
                     <IonButtons slot="start">
-                        <IonBackButton defaultHref="/" />
+                        <IonBackButton defaultHref="/"/>
                     </IonButtons>
                     <IonTitle>Round {round}</IonTitle>
                 </IonToolbar>
@@ -69,12 +95,25 @@ const StartPage: React.FC = () => {
                           setCellValue={setCellValue}
                           findBestMove={findBestMove}
                 />
+                {gameEnded && (
+                    <IonRow>
+                        <IonCol size="12">
+                            <IonButton
+                                expand="block"
+                                color="warning"
+                                onClick={resetGame}
+                                style={{ marginTop: '20px' }}>
+                                RESET
+                            </IonButton>
+                        </IonCol>
+                    </IonRow>
+                )}
             </IonContent>
             <IonFooter>
-                <IonToolbar style={{ height: '200px' }}>
+                <IonToolbar style={{height: '200px'}}>
                     <IonGrid>
                         <IonRow>
-                            <IonCol size="6" style={{ padding: 20 }}>
+                            <IonCol size="6" style={{padding: 20}}>
                                 <IonCard style={{
                                     height: '100%',
                                     display: 'flex',
@@ -84,10 +123,10 @@ const StartPage: React.FC = () => {
                                     backgroundColor: isPlayerTurn ? 'var(--ion-color-warning)' : '',
                                     transition: 'background-color 0.5s ease'
                                 }}>
-                                    <TicIcon style={{ fontSize: '64px' }} />
+                                    <TicIcon style={{fontSize: '64px'}}/>
                                 </IonCard>
                             </IonCol>
-                            <IonCol size="6" style={{ padding: 20 }}>
+                            <IonCol size="6" style={{padding: 20}}>
                                 <IonCard style={{
                                     height: '100%',
                                     display: 'flex',
@@ -97,7 +136,12 @@ const StartPage: React.FC = () => {
                                     backgroundColor: !isPlayerTurn ? 'var(--ion-color-warning)' : '',
                                     transition: 'background-color 0.5s ease'
                                 }}>
-                                    <TacIcon style={{ fontSize: '64px' , fill:'none', stroke: !isPlayerTurn ? 'black' : 'white', color: !isPlayerTurn ? 'black' : 'white'}} />
+                                    <TacIcon style={{
+                                        fontSize: '64px',
+                                        fill: 'none',
+                                        stroke: !isPlayerTurn ? 'black' : 'white',
+                                        color: !isPlayerTurn ? 'black' : 'white'
+                                    }}/>
                                 </IonCard>
                             </IonCol>
                         </IonRow>

@@ -18,9 +18,13 @@ type GameGridProps = {
     onGameOver: (state: 'Loss' | 'Win' | 'Draw') => void;
 };
 
+const playerClickSound = new Audio('./tictoe.mp3');
+const aiClickSound = new Audio('./tactoe.mp3');
+
+
 const GameGrid: React.FC<GameGridProps> = ({
-                                               isPlayerTurn
-                                               , setIsPlayerTurn,
+                                               isPlayerTurn,
+                                               setIsPlayerTurn,
                                                checkIfGameEnded,
                                                grid,
                                                setCellValue,
@@ -35,8 +39,16 @@ const GameGrid: React.FC<GameGridProps> = ({
         setIsPlayerTurn(false);
         console.log('Player moved')
         incrementRound();
+        if (!playerClickSound.paused) {
+            playerClickSound.pause();
+            playerClickSound.currentTime = 0;
+        }
+        playerClickSound.play();
     }
     const canPlayerClick = (rowIndex: number, colIndex: number): boolean => {
+        if (checkIfGameEnded(grid) !== 'Progress') {
+            return false;
+        }
         return grid[rowIndex][colIndex] === null && isPlayerTurn;
     }
 
@@ -59,8 +71,13 @@ const GameGrid: React.FC<GameGridProps> = ({
                 if (move) {
                     const [row, col] = move;
                     setTimeout(() => {
+                        if (!aiClickSound.paused) {
+                            aiClickSound.pause();
+                            aiClickSound.currentTime = 0;
+                        }
                         setCellValue(row, col, 'O');  // Ensure setCellValue is designed to manage state properly
                         setIsPlayerTurn(true);
+                        aiClickSound.play();
                         incrementRound();
                     }, 1000);
                 }

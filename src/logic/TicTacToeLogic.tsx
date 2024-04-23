@@ -80,8 +80,13 @@ const useTicTacToeLogic = (gridSize: number) => {
             setWinCells(winnary);
         }
     }
+    const resetGameGrid = () => {
+        const newGrid = Array(gridSize).fill(Array(gridSize).fill(null));
+        setGrid(newGrid);
+        setWinCells([]);
+    }
 
-    return { grid, setCellValue, isPlayerTurn, checkIfGameEnded, setIsPlayerTurn, winCells, updateWinCells};
+    return { grid, setCellValue, isPlayerTurn, checkIfGameEnded, setIsPlayerTurn, winCells, updateWinCells, resetGameGrid, setGrid };
 };
 
 export default useTicTacToeLogic;

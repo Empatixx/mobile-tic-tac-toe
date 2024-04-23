@@ -1,7 +1,6 @@
-import React, {useState, useEffect} from 'react';
-import {IonCol, IonRow, IonGrid, IonCard} from '@ionic/react';
+import React from 'react';
+import { IonCol } from '@ionic/react';
 import TicIcon from './TicIcon';
-import './GameGrid.css';
 import TacIcon from "./TacIcon";
 
 type GridCellProps = {
@@ -14,8 +13,7 @@ type GridCellProps = {
     isWinCell: boolean;
 };
 
-// Update GridCell with new props
-const GridCell: React.FC<GridCellProps> = ({onAction, rowIndex, colIndex, cellValue, setCellValue, canPlayerClick}) => {
+const GridCell: React.FC<GridCellProps> = ({onAction, rowIndex, colIndex, cellValue, setCellValue, canPlayerClick, isWinCell}) => {
     const toggleIcon = (): void => {
         if (!canPlayerClick(rowIndex, colIndex)) return;
         if (cellValue === null) {
@@ -23,6 +21,10 @@ const GridCell: React.FC<GridCellProps> = ({onAction, rowIndex, colIndex, cellVa
             onAction();
         }
     };
+
+    // Define the color based on isWinCell
+    const cellColor = isWinCell ? 'gold' : 'rgb(31, 27, 35)';
+
     return (
         <IonCol onClick={toggleIcon}>
             <div className="grid-cell">
@@ -30,13 +32,13 @@ const GridCell: React.FC<GridCellProps> = ({onAction, rowIndex, colIndex, cellVa
                     cellValue === 'X' ?
                         <TicIcon style={{
                             fontSize: '48px',
-                            color: 'rgb(31, 27, 35)'
+                            color: cellColor
                         }}/> : cellValue === 'O' ?
                             <TacIcon style={{
                                 fontSize: '48px',
                                 fill: 'none',
-                                stroke: 'rgb(31, 27, 35)',
-                                color: 'rgb(31, 27, 35)'
+                                stroke: cellColor,
+                                color: cellColor
                             }}/>
                             : null
                 }
