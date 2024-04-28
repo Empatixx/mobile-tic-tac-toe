@@ -34,7 +34,7 @@ const GameGrid: React.FC<GameGridProps> = ({
                                                onGameOver,
                                                winCells,
                                            }) => {
-    const onPlayerClick = (move: [number, number]) => {
+    const onPlayerClick = () => {
         if (!isPlayerTurn) return;
         setIsPlayerTurn(false);
         console.log('Player moved')
