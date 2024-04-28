@@ -61,14 +61,14 @@ const SettingsPage: React.FC = () => {
                         }} />
                     </IonItem>
                     <IonItem>
-                        <IonLabel>Player Name</IonLabel>
+                        <IonLabel slot="start">Player Name</IonLabel>
                         <IonInput placeholder="Enter your name" value={playerName} onIonChange={e => {
                             setPlayerName(e.detail.value!);
                             handleSaveSetting('playerName', e.detail.value!);
                         }} />
                     </IonItem>
                     <IonItem>
-                        <IonLabel>Difficulty</IonLabel>
+                        <IonLabel slot="start">Difficulty</IonLabel>
                         <IonSelect placeholder="Select Difficulty" value={difficulty} onIonChange={e => {
                             setDifficulty(e.detail.value);
                             handleSaveSetting('difficulty', e.detail.value);

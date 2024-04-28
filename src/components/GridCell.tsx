@@ -4,7 +4,7 @@ import TicIcon from './TicIcon';
 import TacIcon from "./TacIcon";
 
 type GridCellProps = {
-    onAction: () => void;
+    onAction: (move: [number, number]) => void;
     rowIndex: number;
     colIndex: number;
     cellValue: 'X' | 'O' | null;
@@ -18,7 +18,7 @@ const GridCell: React.FC<GridCellProps> = ({onAction, rowIndex, colIndex, cellVa
         if (!canPlayerClick(rowIndex, colIndex)) return;
         if (cellValue === null) {
             setCellValue(rowIndex, colIndex, 'X'); // Assume 'X' is the current player for simplicity
-            onAction();
+            onAction([rowIndex, colIndex]);
         }
     };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import {useState, useEffect} from 'react';
 
 export type CellValue = 'X' | 'O' | null;
 
@@ -12,33 +12,39 @@ const useTicTacToeLogic = (gridSize: number) => {
         newGrid[rowIndex][colIndex] = value;
         setGrid(newGrid);
     };
-    const checkIfGameEnded = function(grid: CellValue[][]) : string{
-        const checkLine = (cells: CellValue[]): boolean => {
-            const firstCell = cells[0];
-            return firstCell !== null && cells.every(cell => cell === firstCell);
-        };
+    const checkIfGameEnded = function (grid: CellValue[][]): string {
 
-        for (const row of grid) {
-            if (checkLine(row)) {
-                return row[0]!;
+        for (let y = 0; y < gridSize; y++) {
+            for (let x = 0; x < gridSize; x++) {
+                const cell = grid[y][x];
+                if (cell === null) {
+                    continue;
+                }
+                // horizontal
+                if (x + 4 <= gridSize) {
+                    if (cell === grid[y][x + 1] && cell === grid[y][x + 2] && cell === grid[y][x + 3] && cell === grid[y][x + 4]) {
+                        return cell;
+                    }
+                }
+                // vertical
+                if (y + 4 <= gridSize) {
+                    if (cell === grid[y + 1][x] && cell === grid[y + 2][x] && cell === grid[y + 3][x] && cell === grid[y + 4][x]) {
+                        return cell;
+                    }
+                }
+                // diagonal
+                if (x + 4 <= gridSize && y + 4 <= gridSize) {
+                    if (cell === grid[y + 1][x + 1] && cell === grid[y + 2][x + 2] && cell === grid[y + 3][x + 3] && cell === grid[y + 4][x + 4]) {
+                        return cell;
+                    }
+                }
+                // second diagonal
+                if (x - 4 >= -1 && y + 4 <= gridSize) {
+                    if (cell === grid[y + 1][x - 1] && cell === grid[y + 2][x - 2] && cell === grid[y + 3][x - 3] && cell === grid[y + 4][x - 4]) {
+                        return cell;
+                    }
+                }
             }
-        }
-
-        for (let col = 0; col < gridSize; col++) {
-            const column = grid.map(row => row[col]);
-            if (checkLine(column)) {
-                return column[0]!;
-            }
-        }
-
-        const diagonalTLBR = grid.map((row, index) => row[index]);
-        if (checkLine(diagonalTLBR)) {
-            return diagonalTLBR[0]!;
-        }
-
-        const diagonalTRBL = grid.map((row, index) => grid[index][gridSize - 1 - index]);
-        if (checkLine(diagonalTRBL)) {
-            return diagonalTRBL[0]!;
         }
 
         const isDraw = grid.every(row => row.every(cell => cell !== null));
@@ -48,36 +54,42 @@ const useTicTacToeLogic = (gridSize: number) => {
         return 'Progress';
     }
     const updateWinCells = (grid: CellValue[][]) => {
-        const checkLine = (cells: CellValue[]): boolean => {
-            const firstCell = cells[0];
-            return firstCell !== null && cells.every(cell => cell === firstCell);
-        };
+        for (let y = 0; y < gridSize; y++) {
+            for (let x = 0; x < gridSize; x++) {
+                const cell = grid[y][x];
+                if (cell === null) {
+                    continue;
+                }
+                // horizontal
+                if (x + 4 <= gridSize) {
+                    if (cell === grid[y][x + 1] && cell === grid[y][x + 2] && cell === grid[y][x + 3] && cell === grid[y][x + 4]) {
+                        setWinCells([[y, x], [y, x + 1], [y, x + 2], [y, x + 3], [y, x + 4]]);
+                        return;
+                    }
+                }
+                // vertical
+                if (y + 4 <= gridSize) {
+                    if (cell === grid[y + 1][x] && cell === grid[y + 2][x] && cell === grid[y + 3][x] && cell === grid[y + 4][x]) {
+                        setWinCells([[y, x], [y + 1, x], [y + 2, x], [y + 3, x], [y + 4, x]]);
+                        return;
+                    }
+                }
+                // diagonal
+                if (x + 4 <= gridSize && y + 4 <= gridSize) {
+                    if (cell === grid[y + 1][x + 1] && cell === grid[y + 2][x + 2] && cell === grid[y + 3][x + 3] && cell === grid[y + 4][x + 4]) {
+                        setWinCells([[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3], [y + 4, x + 4]]);
+                        return;
+                    }
+                }
+                // second diagonal
+                if (x - 4 >= -1 && y + 4 <= gridSize) {
+                    if (cell === grid[y + 1][x - 1] && cell === grid[y + 2][x - 2] && cell === grid[y + 3][x - 3] && cell === grid[y + 4][x - 4]) {
+                        setWinCells([[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3], [y + 4, x - 4]]);
+                        return;
 
-        for (let i = 0; i < gridSize; i++) {
-            if (checkLine(grid[i])) {
-                const winnary = Array.from({ length: gridSize }, (_, j) => [i, j]);
-                setWinCells(winnary);
+                    }
+                }
             }
-        }
-
-        for (let i = 0; i < gridSize; i++) {
-            const column = grid.map(row => row[i]);
-            if (checkLine(column)) {
-                const winnary = Array.from({ length: gridSize }, (_, j) => [j, i]);
-                setWinCells(winnary);
-            }
-        }
-
-        const diagonalTLBR = grid.map((row, index) => row[index]);
-        if (checkLine(diagonalTLBR)) {
-            const winnary = Array.from({ length: gridSize }, (_, j) => [j, j]);
-            setWinCells(winnary);
-        }
-
-        const diagonalTRBL = grid.map((row, index) => grid[index][gridSize - 1 - index]);
-        if (checkLine(diagonalTRBL)) {
-            const winnary = Array.from({ length: gridSize }, (_, j) => [j, gridSize - 1 - j]);
-            setWinCells(winnary);
         }
     }
     const resetGameGrid = () => {
@@ -86,7 +98,7 @@ const useTicTacToeLogic = (gridSize: number) => {
         setWinCells([]);
     }
 
-    return { grid, setCellValue, isPlayerTurn, checkIfGameEnded, setIsPlayerTurn, winCells, updateWinCells, resetGameGrid, setGrid };
+    return {grid, setCellValue, isPlayerTurn, checkIfGameEnded, updateWinCells, setIsPlayerTurn, winCells, resetGameGrid, setGrid};
 };
 
 export default useTicTacToeLogic;

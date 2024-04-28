@@ -14,6 +14,7 @@ import { ellipse, square, triangle } from 'ionicons/icons';
 import Tab1 from './pages/Tab1';
 import Tab2 from './pages/Tab2';
 import Tab3 from './pages/Tab3';
+import { liveQuery } from 'dexie';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -40,24 +41,42 @@ import { addIcons } from 'ionicons';
  * https://ionicframework.com/docs/theming/dark-mode
  */
 
-/* import '@ionic/react/css/palettes/dark.always.css'; */
-/* import '@ionic/react/css/palettes/dark.class.css'; */
-import '@ionic/react/css/palettes/dark.system.css';
+// import '@ionic/react/css/palettes/dark.always.css';
+import '@ionic/react/css/palettes/dark.class.css';
+//import '@ionic/react/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import React from "react";
+import React, {useEffect, useState} from "react";
 import StartPage from "./pages/StartPage";
 import SettingsPage from "./pages/SettingsPage";
 import MainPage from "./pages/MenuPage";
 import HistoryPage from "./pages/HistoryPage";
 import {t} from "vitest/dist/reporters-5f784f42";
+import {db} from "./db/SettingsDB";
 
 setupIonicReact();
 
 const App: React.FC = () => {
-  return (
-      <IonApp>
+    const [darkMode, setDarkMode] = useState(false);
+    useEffect(() => {
+        const subscription = liveQuery(() => db.getSetting('darkMode'))
+            .subscribe({
+                next: (darkModeSetting) => {
+                    console.log('Dark mode setting changed:', darkModeSetting);
+                    setDarkMode(darkModeSetting === 'true');
+                },
+                error: (err) => {
+                    console.error('Failed to subscribe to dark mode setting:', err);
+                }
+            });
+
+        // Cleanup function to unsubscribe when the component unmounts
+        return () => subscription.unsubscribe();
+    }, []);
+
+    return (
+      <IonApp className={darkMode ? 'ion-palette-dark' : ''}>
         <IonReactRouter>
             <IonRouterOutlet>
               <Route path="/" component={MainPage} exact />

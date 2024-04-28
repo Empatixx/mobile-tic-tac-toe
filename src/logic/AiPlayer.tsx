@@ -14,7 +14,7 @@ const useAiPlayer = (grid: CellValue[][], gridSize: number, checkIfGameEnded: (g
                 case 'Draw': return 0;
             }
         }
-        if (depth >= 5) {
+        if (false) {
             return 0; // Returning 0 as a neutral score when max depth is reached
         }
 

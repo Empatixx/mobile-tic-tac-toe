@@ -1,13 +1,18 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
-    IonPage,
-    IonHeader,
-    IonToolbar,
-    IonTitle,
+    IonBackButton,
+    IonButton,
+    IonButtons,
+    IonCard,
+    IonCol,
     IonContent,
     IonFooter,
-    IonIcon,
-    IonText, IonButtons, IonBackButton, IonCol, IonRow, IonGrid, IonItem, IonCard, IonButton
+    IonGrid,
+    IonHeader,
+    IonPage,
+    IonRow,
+    IonTitle,
+    IonToolbar
 } from '@ionic/react';
 import TacIcon from "../components/TacIcon";
 import TicIcon from "../components/TicIcon";
@@ -16,6 +21,7 @@ import {GameHistory} from "./HistoryPage";
 import useTicTacToeLogic from "../logic/TicTacToeLogic";
 import useAiPlayer from "../logic/AiPlayer";
 import GameResultModal from "../components/GameResultModal";
+import {db} from "../db/SettingsDB";
 
 const applauseSound = new Audio('./win.mp3');
 
@@ -24,7 +30,7 @@ const StartPage: React.FC = () => {
     const [showModal, setShowModal] = useState<boolean>(false);
     const [result, setResult] = useState<'Win' | 'Loss' | 'Draw'>('Draw');
     const [gameEnded, setGameEnded] = useState<boolean>(false);
-    const gridSize = 5;
+    const gridSize = 10;
     const {
         grid,
         setCellValue,
@@ -53,24 +59,29 @@ const StartPage: React.FC = () => {
         }
     };
     const handleGameResult = (state: 'Loss' | 'Win' | 'Draw') => {
-        const history: GameHistory = {
-            playerName: 'Player 1',
-            result: state === 'Win' ? 'Won' : state === 'Loss' ? 'Lost' : 'Draw',
-            rounds: round,
-            timestamp: new Date()
-        };
-        const storedHistories = localStorage.getItem('gameHistories');
-        const histories: GameHistory[] = storedHistories ? JSON.parse(storedHistories) : [];
-        histories.push(history);
-        localStorage.setItem('gameHistories', JSON.stringify(histories));
-
-        setResult(state); // Set the result
-        setShowModal(true); // Show the modal
-        setGameEnded(true); // Set the game as ended
-        updateWinCells(grid); // Update the win cells
-        if (state === 'Win' || state === 'Draw') {
-            applauseSound.play();
+        const loadPlayerName = async () => {
+            return await db.getSetting('playerName') || 'Anonymous';
         }
+        loadPlayerName().then((playerName) => {
+            const history: GameHistory = {
+                playerName: playerName,
+                result: state === 'Win' ? 'Won' : state === 'Loss' ? 'Lost' : 'Draw',
+                rounds: round,
+                timestamp: new Date()
+            };
+            const storedHistories = localStorage.getItem('gameHistories');
+            const histories: GameHistory[] = storedHistories ? JSON.parse(storedHistories) : [];
+            histories.push(history);
+            localStorage.setItem('gameHistories', JSON.stringify(histories));
+
+            setResult(state); // Set the result
+            setShowModal(true); // Show the modal
+            setGameEnded(true); // Set the game as ended
+            updateWinCells(grid); // Update the win cells
+            if (state === 'Win' || state === 'Draw') {
+                applauseSound.play();
+            }
+        });
     };
 
     return (
