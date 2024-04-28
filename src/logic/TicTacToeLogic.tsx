@@ -21,25 +21,25 @@ const useTicTacToeLogic = (gridSize: number) => {
                     continue;
                 }
                 // horizontal
-                if (x + 4 <= gridSize) {
+                if (x + 4 < gridSize) {
                     if (cell === grid[y][x + 1] && cell === grid[y][x + 2] && cell === grid[y][x + 3] && cell === grid[y][x + 4]) {
                         return cell;
                     }
                 }
                 // vertical
-                if (y + 4 <= gridSize) {
+                if (y + 4 < gridSize) {
                     if (cell === grid[y + 1][x] && cell === grid[y + 2][x] && cell === grid[y + 3][x] && cell === grid[y + 4][x]) {
                         return cell;
                     }
                 }
                 // diagonal
-                if (x + 4 <= gridSize && y + 4 <= gridSize) {
+                if (x + 4 < gridSize && y + 4 < gridSize) {
                     if (cell === grid[y + 1][x + 1] && cell === grid[y + 2][x + 2] && cell === grid[y + 3][x + 3] && cell === grid[y + 4][x + 4]) {
                         return cell;
                     }
                 }
                 // second diagonal
-                if (x - 4 >= -1 && y + 4 <= gridSize) {
+                if (x - 4 > -1 && y + 4 < gridSize) {
                     if (cell === grid[y + 1][x - 1] && cell === grid[y + 2][x - 2] && cell === grid[y + 3][x - 3] && cell === grid[y + 4][x - 4]) {
                         return cell;
                     }
