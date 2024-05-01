@@ -1,12 +1,30 @@
 // src/pages/SettingsPage.js
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-    IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList,
-    IonItem, IonLabel, IonToggle, IonIcon, IonButtons, IonBackButton,
-    IonInput, IonSelect, IonSelectOption
+    IonPage,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonList,
+    IonItem,
+    IonLabel,
+    IonToggle,
+    IonIcon,
+    IonButtons,
+    IonBackButton,
+    IonInput,
+    IonSelect,
+    IonSelectOption,
+    IonItemGroup,
+    IonItemDivider,
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardContent, IonButton
 } from '@ionic/react';
-import { moon, notifications, volumeHigh } from 'ionicons/icons';
-import { db } from '../db/SettingsDB';
+import {moon, notifications, volumeHigh} from 'ionicons/icons';
+import {db} from '../db/SettingsDB';
 
 const SettingsPage: React.FC = () => {
     const [playerName, setPlayerName] = useState('');
@@ -37,48 +55,64 @@ const SettingsPage: React.FC = () => {
             <IonHeader>
                 <IonToolbar color="primary">
                     <IonButtons slot="start">
-                        <IonBackButton defaultHref="/" />
+                        <IonBackButton defaultHref="/"/>
                     </IonButtons>
                     <IonTitle>Settings</IonTitle>
                 </IonToolbar>
             </IonHeader>
             <IonContent className="ion-padding">
-                <IonList>
-                    <IonItem>
-                        <IonIcon slot="start" icon={volumeHigh} />
-                        <IonLabel>Enable Sounds</IonLabel>
-                        <IonToggle checked={audioEnabled} onIonChange={e => {
-                            setAudioEnabled(e.detail.checked);
-                            handleSaveSetting('audioEnabled', e.detail.checked.toString());
-                        }} />
-                    </IonItem>
-                    <IonItem>
-                        <IonIcon slot="start" icon={moon} />
-                        <IonLabel>Enable Dark Mode</IonLabel>
-                        <IonToggle checked={darkMode} onIonChange={e => {
-                            setDarkMode(e.detail.checked);
-                            handleSaveSetting('darkMode', e.detail.checked.toString());
-                        }} />
-                    </IonItem>
-                    <IonItem>
-                        <IonLabel slot="start">Player Name</IonLabel>
-                        <IonInput placeholder="Enter your name" value={playerName} onIonChange={e => {
-                            setPlayerName(e.detail.value!);
-                            handleSaveSetting('playerName', e.detail.value!);
-                        }} />
-                    </IonItem>
-                    <IonItem>
-                        <IonLabel slot="start">Difficulty</IonLabel>
-                        <IonSelect placeholder="Select Difficulty" value={difficulty} onIonChange={e => {
-                            setDifficulty(e.detail.value);
-                            handleSaveSetting('difficulty', e.detail.value);
-                        }}>
-                            <IonSelectOption style={{ color: 'green' }} value="easy">Easy</IonSelectOption>
-                            <IonSelectOption style={{ color: 'yellow' }} value="medium">Medium</IonSelectOption>
-                            <IonSelectOption style={{ color: 'red' }} value="hard">Hard</IonSelectOption>
-                        </IonSelect>
-                    </IonItem>
-                </IonList>
+                <IonCard>
+                    <IonCardHeader>
+                        <IonCardTitle>User settings</IonCardTitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                        <IonItemGroup>
+                            <IonItem>
+                                <IonLabel slot="start">Player Name</IonLabel>
+                                <IonInput placeholder="Enter your name" value={playerName} onIonChange={e => {
+                                    setPlayerName(e.detail.value!);
+                                    handleSaveSetting('playerName', e.detail.value!);
+                                }}/>
+                            </IonItem>
+                            <IonItem>
+                                <IonLabel slot="start">Difficulty</IonLabel>
+                                <IonSelect placeholder="Select Difficulty" value={difficulty} onIonChange={e => {
+                                    setDifficulty(e.detail.value);
+                                    handleSaveSetting('difficulty', e.detail.value);
+                                }}>
+                                    <IonSelectOption style={{color: 'green'}} value="easy">Easy</IonSelectOption>
+                                    <IonSelectOption style={{color: 'yellow'}} value="medium">Medium</IonSelectOption>
+                                    <IonSelectOption style={{color: 'red'}} value="hard">Hard</IonSelectOption>
+                                </IonSelect>
+                            </IonItem>
+                        </IonItemGroup>
+                    </IonCardContent>
+                </IonCard>
+                <IonCard>
+                    <IonCardHeader>
+                        <IonCardTitle>App settings</IonCardTitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                        <IonItemGroup>
+                            <IonItem>
+                                <IonIcon slot="start" icon={volumeHigh}/>
+                                <IonLabel>Enable Sounds</IonLabel>
+                                <IonToggle slot="end" checked={audioEnabled} onIonChange={e => {
+                                    setAudioEnabled(e.detail.checked);
+                                    handleSaveSetting('audioEnabled', e.detail.checked.toString());
+                                }}/>
+                            </IonItem>
+                            <IonItem>
+                                <IonIcon slot="start" icon={moon}/>
+                                <IonLabel>Enable Dark Mode</IonLabel>
+                                <IonToggle slot="end" checked={darkMode} onIonChange={e => {
+                                    setDarkMode(e.detail.checked);
+                                    handleSaveSetting('darkMode', e.detail.checked.toString());
+                                }}/>
+                            </IonItem>
+                        </IonItemGroup>
+                    </IonCardContent>
+                </IonCard>
             </IonContent>
         </IonPage>
     );

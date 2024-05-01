@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import {CellValue} from "./TicTacToeLogic";
+import {db} from "../db/SettingsDB";
 
 type WorkerArrayType = Worker[];
 
@@ -7,6 +8,22 @@ const useAiPlayer = (grid: CellValue[][], gridSize: number, checkIfGameEnded: (g
     // Determine the number of workers based on the available cores
     const numWorkers = gridSize * gridSize;
     const [workers, setWorkers] = useState<WorkerArrayType>([]);
+    const [simulationsPerMove, setSimulationsPerMove] = useState(100);
+    const stepsPerDifficulty = {
+        'easy': 100,
+        'medium': 300,
+        'hard': 500
+    };
+    // @ts-ignore
+    const difficulty: () => Promise<String> = async () => {
+        return await db.getSetting('difficulty') || 'easy';
+    }
+    difficulty().then((difficultyLevel) => {
+        // @ts-ignore
+        setSimulationsPerMove(stepsPerDifficulty[difficultyLevel.toLowerCase()]);
+        console.log('Difficulty level:', difficultyLevel);
+        console.log('Simulations per move:', simulationsPerMove);
+    });
 
     // Initialize workers on mount and terminate on unmount
     useEffect(() => {
@@ -24,7 +41,7 @@ const useAiPlayer = (grid: CellValue[][], gridSize: number, checkIfGameEnded: (g
             for (let j = 0; j < gridSize; j++) {
                 if (grid[i][j] === null) {
                     if (window.Worker) {
-                        const simulationsPerMove = 900;
+                        // @ts-ignore
                         const workerIndex = (i * gridSize + j) % numWorkers; // Assign each task to a worker in a round-robin fashion
                         const promise = new Promise((resolve, reject) => {
                             const worker = workers[workerIndex];
@@ -55,7 +72,7 @@ const useAiPlayer = (grid: CellValue[][], gridSize: number, checkIfGameEnded: (g
             console.log('All promises settled:', results);
             let bestMove = null;
             let bestScore = -Infinity;
-            const simulationsPerMove = 900;
+            // @ts-ignore
             results.forEach(result => {
                 if (result.status === 'fulfilled') {
                     const {move, winCount} = result.value;

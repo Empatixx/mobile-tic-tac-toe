@@ -70,7 +70,7 @@ const HistoryPage: React.FC = () => {
         datasets: [
             { label: 'Wins', data: [], borderColor: 'green', backgroundColor: 'rgba(0, 255, 0, 0.5)' },
             { label: 'Losses', data: [], borderColor: 'red', backgroundColor: 'rgba(255, 0, 0, 0.5)' },
-            { label: 'Draws', data: [], borderColor: 'blue', backgroundColor: 'rgba(0, 0, 255, 0.5)' }]
+            { label: 'Draws', data: [], borderColor: 'yellow', backgroundColor: 'rgba(255, 255, 0, 0.5)' }]
     })
     function updateChartData(gameHistories: GameHistory[]) {
         const last7Days = [...Array(7).keys()].map(days => new Date(Date.now() - 86400000 * days));
