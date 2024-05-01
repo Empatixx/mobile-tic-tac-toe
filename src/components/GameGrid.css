@@ -8,8 +8,8 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 25px; /* adjust based on your preference */
-    height: 25px; /* adjust based on your preference */
+    width: 1.5em; /* adjust based on your preference */
+    height: 1.5em; /* adjust based on your preference */
     color: #540354; /* Deep purple for text/icons */
     background: linear-gradient(135deg, #8A2BE2, #DA70D6); /* Diagonal gradient from purple to pink */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* subtle shadow */

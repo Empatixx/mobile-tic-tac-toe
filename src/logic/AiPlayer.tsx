@@ -1,66 +1,78 @@
-import { useState } from 'react';
-import { CellValue } from "./TicTacToeLogic";
+import {useEffect, useState} from 'react';
+import {CellValue} from "./TicTacToeLogic";
+
+type WorkerArrayType = Worker[];
 
 const useAiPlayer = (grid: CellValue[][], gridSize: number, checkIfGameEnded: (grid: CellValue[][]) => string) => {
-    // Function to perform a single Monte Carlo simulation
-    const runSimulation = (gridCopy: CellValue[][], player: 'O' | 'X') => {
-        const moves = [];
-        for (let i = 0; i < gridSize; i++) {
-            for (let j = 0; j < gridSize; j++) {
-                if (gridCopy[i][j] === null) {
-                    moves.push([i, j]);
-                }
-            }
-        }
+    // Determine the number of workers based on the available cores
+    const numWorkers = gridSize * gridSize;
+    const [workers, setWorkers] = useState<WorkerArrayType>([]);
 
-        while (moves.length > 0) {
-            const moveIdx = Math.floor(Math.random() * moves.length);
-            const [row, col] = moves.splice(moveIdx, 1)[0];
-            gridCopy[row][col] = player;
-            player = player === 'O' ? 'X' : 'O'; // Toggle player
-            const result = checkIfGameEnded(gridCopy);
-            if (result !== 'Progress') {
-                return result;
-            }
-        }
+    // Initialize workers on mount and terminate on unmount
+    useEffect(() => {
+        const newWorkers = Array.from({length: numWorkers}, () => new Worker(new URL('./monteCarloWorker.ts', import.meta.url)));
+        setWorkers(newWorkers);
+        return () => {
+            newWorkers.forEach(worker => worker.terminate());
+        };
+    }, [numWorkers]);
 
-        return 'Draw'; // If no more moves and no winner, it's a draw
-    };
-
-    // Function to find the best move using Monte Carlo Tree Search
-    const findBestMove = () => {
-        let bestMove = null;
-        let bestScore = -Infinity;
-        const simulationsPerMove = 300; // Number of simulations to run per possible move
+    const findBestMove = async () => {
+        const promises = [];
 
         for (let i = 0; i < gridSize; i++) {
             for (let j = 0; j < gridSize; j++) {
                 if (grid[i][j] === null) {
-                    let winCount = 0;
-                    for (let sim = 0; sim < simulationsPerMove; sim++) {
-                        const gridCopy = grid.map(row => [...row]);
-                        gridCopy[i][j] = 'O'; // AI makes its move
-                        const result = runSimulation(gridCopy, 'X'); // Opponent's turn next
-                        if (result === 'O') {
-                            winCount++;
-                        } else if (result === 'Draw') {
-                            winCount += 0.5;
-                        }
-                    }
+                    if (window.Worker) {
+                        const simulationsPerMove = 900;
+                        const workerIndex = (i * gridSize + j) % numWorkers; // Assign each task to a worker in a round-robin fashion
+                        const promise = new Promise((resolve, reject) => {
+                            const worker = workers[workerIndex];
+                            worker.postMessage({
+                                grid: grid.map(row => [...row]),
+                                move: [i, j],
+                                player: 'O',
+                                simulationsPerMove
+                            });
 
-                    const score = winCount / simulationsPerMove;
-                    if (score > bestScore) {
-                        bestScore = score;
-                        bestMove = [i, j];
+                            worker.onmessage = (event) => {
+                                console.log('Worker message:', event.data);
+                                resolve(event.data);
+                            };
+
+                            worker.onerror = function (error) {
+                                reject(new Error(`Worker error: ${error.message}`));
+                            }
+                        });
+                        promises.push(promise);
+                    } else {
+                        console.log('Web Workers are not supported in this browser');
                     }
                 }
             }
         }
-
-        return bestMove;
+        return Promise.allSettled(promises).then((results) => {
+            console.log('All promises settled:', results);
+            let bestMove = null;
+            let bestScore = -Infinity;
+            const simulationsPerMove = 900;
+            results.forEach(result => {
+                if (result.status === 'fulfilled') {
+                    const {move, winCount} = result.value;
+                    const currentScore = winCount / simulationsPerMove;
+                    if (currentScore > bestScore) {
+                        bestMove = move;
+                        bestScore = currentScore;
+                    }
+                }
+            });
+            return bestMove
+        }).catch(error => {
+            console.error('Error in promises:', error);
+        });
     };
 
-    return { findBestMove };
+    return {findBestMove};
 };
 
 export default useAiPlayer;

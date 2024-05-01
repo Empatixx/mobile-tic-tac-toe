@@ -68,7 +68,7 @@ const GameGrid: React.FC<GameGridProps> = ({
                 console.log('AI moved');
                 // Here, findBestMove should operate on a copy or return data that is used to update the state properly
                 const move = findBestMove();
-                if (move) {
+                move.then((move: [number, number]) => {
                     const [row, col] = move;
                     setTimeout(() => {
                         if (!aiClickSound.paused) {
@@ -80,7 +80,9 @@ const GameGrid: React.FC<GameGridProps> = ({
                         aiClickSound.play();
                         incrementRound();
                     }, 1000);
-                }
+                }).catch((error: any) => {
+                    console.error('Error in findBestMove:', error);
+                });
             }
         }
     }, [isPlayerTurn]);
