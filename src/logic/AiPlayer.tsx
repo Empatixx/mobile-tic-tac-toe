@@ -75,6 +75,7 @@ const useAiPlayer = (grid: CellValue[][], gridSize: number, checkIfGameEnded: (g
             // @ts-ignore
             results.forEach(result => {
                 if (result.status === 'fulfilled') {
+                    // @ts-ignore
                     const {move, winCount} = result.value;
                     const currentScore = winCount / simulationsPerMove;
                     if (currentScore > bestScore) {
