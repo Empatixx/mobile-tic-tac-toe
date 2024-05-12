@@ -64,23 +64,40 @@ const GameGrid: React.FC<GameGridProps> = ({
     useEffect(() => {
         if (!isPlayerTurn) {
             const state = checkIfGameEnded(grid);
-            if (state === 'Progress') { // Check if it's AI's turn and game hasn't ended
+            if (state === 'Progress') { // Check if it's AI's turn and the game hasn't ended
                 console.log('AI moved');
-                // Here, findBestMove should operate on a copy or return data that is used to update the state properly
-                const move = findBestMove();
-                if (move) {
-                    const [row, col] = move;
-                    setTimeout(() => {
-                        if (!aiClickSound.paused) {
-                            aiClickSound.pause();
-                            aiClickSound.currentTime = 0;
+
+                const startTime = Date.now();
+
+                // This will run the AI calculation and a minimum timeout in parallel
+                const movePromise = findBestMove();
+                const timeoutPromise = new Promise(resolve => setTimeout(resolve, 1000));
+
+                Promise.all([movePromise, timeoutPromise]).then(([move]) => {
+                    if (move) {
+                        const [row, col] = move;
+                        const endTime = Date.now();
+                        const elapsed = endTime - startTime;
+
+                        console.log(`AI calculation and waiting completed in ${elapsed} ms`);
+
+                        // Ensuring no other game state updates have occurred while waiting
+                        if (!isPlayerTurn && checkIfGameEnded(grid) === 'Progress') {
+                            if (!aiClickSound.paused) {
+                                aiClickSound.pause();
+                                aiClickSound.currentTime = 0;
+                            }
+                            setCellValue(row, col, 'O'); // Ensure setCellValue is designed to manage state properly
+                            setIsPlayerTurn(true);
+                            aiClickSound.play();
+                            incrementRound();
                         }
-                        setCellValue(row, col, 'O');  // Ensure setCellValue is designed to manage state properly
-                        setIsPlayerTurn(true);
-                        aiClickSound.play();
-                        incrementRound();
-                    }, 1000);
-                }
+                    } else {
+                        console.error("No move returned by AI");
+                    }
+                }).catch(error => {
+                    console.error('Error in findBestMove:', error);
+                });
             }
         }
     }, [isPlayerTurn]);
