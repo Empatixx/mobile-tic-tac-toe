@@ -23,7 +23,7 @@ const GridCell: React.FC<GridCellProps> = ({onAction, rowIndex, colIndex, cellVa
     };
 
     // Define the color based on isWinCell
-    const cellColor = isWinCell ? 'gold' : 'rgb(31, 27, 35)';
+    const cellColor = isWinCell ? 'gold' : (cellValue === 'X' ? 'lime' : '#F7DC6F')
 
     return (
         <IonCol onClick={toggleIcon}>
