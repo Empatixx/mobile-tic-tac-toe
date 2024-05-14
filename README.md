@@ -88,10 +88,11 @@ Tic Tac Toe is a classic strategy game where two players take turns marking a sp
 - **Typescript**
 - **React with Ionic**
 - **Capacitor**
-- **IndexedDB**:
+- **IndexedDB**
 
 ## How to run
 ```ionic build
 ionic copy
 ionic cap open android/ios
-ionic cap run android/ios```
+ionic cap run android/ios
+```
