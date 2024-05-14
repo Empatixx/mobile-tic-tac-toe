@@ -11,12 +11,26 @@
     width: 1.5em; /* adjust based on your preference */
     height: 1.5em; /* adjust based on your preference */
     color: #540354; /* Deep purple for text/icons */
-    background: linear-gradient(135deg, #8A2BE2, #DA70D6); /* Diagonal gradient from purple to pink */
+    background: linear-gradient(135deg, #5e0fa8, #93338f); /* Diagonal gradient from purple to pink */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* subtle shadow */
     border-radius: 5px; /* rounded corners */
     margin: 1px;
     transition: background-color 0.3s, box-shadow 0.3s; /* smooth transitions for hover effects */
 }
+.grid-cell-win {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.5em; /* adjust based on your preference */
+    height: 1.5em; /* adjust based on your preference */
+    color: #b233b2; /* Deep purple for text/icons */
+    background: linear-gradient(135deg, #ffde5d, #dcb662);/* Diagonal gradient from purple to pink */
+    box-shadow: rgba(255, 255, 0, 1) 0px 2px 7px 0.4px;
+    border-radius: 5px; /* rounded corners */
+    margin: 1px;
+    transition: background-color 0.3s, box-shadow 0.3s; /* smooth transitions for hover effects */
+}
+
 
 .grid-cell:hover {
     background-color: #e1e1e1; /* slightly darker on hover */

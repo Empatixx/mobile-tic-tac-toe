@@ -23,11 +23,11 @@ const GridCell: React.FC<GridCellProps> = ({onAction, rowIndex, colIndex, cellVa
     };
 
     // Define the color based on isWinCell
-    const cellColor = isWinCell ? 'gold' : (cellValue === 'X' ? 'lime' : '#F7DC6F')
-
+    const cellColor = isWinCell ? (cellValue === 'X' ? 'green' : 'red') : (cellValue === 'X' ? 'lime' : 'tomato');
+    const cellClazz = isWinCell ? 'grid-cell-win' : 'grid-cell';
     return (
         <IonCol onClick={toggleIcon}>
-            <div className="grid-cell">
+            <div className={cellClazz}>
                 {
                     cellValue === 'X' ?
                         <TicIcon style={{
