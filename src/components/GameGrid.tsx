@@ -4,6 +4,7 @@ import './GameGrid.css';
 import GridCell from './GridCell';
 import useTicTacToeLogic, {CellValue} from "../logic/TicTacToeLogic";
 import useAiPlayer from "../logic/AiPlayer";
+import {db} from "../db/SettingsDB";
 
 type GameGridProps = {
     isPlayerTurn: boolean;
@@ -34,16 +35,23 @@ const GameGrid: React.FC<GameGridProps> = ({
                                                onGameOver,
                                                winCells,
                                            }) => {
+    const loadEnabledSound = async () => {
+        return await db.getSetting('audioEnabled');
+    }
     const onPlayerClick = () => {
         if (!isPlayerTurn) return;
         setIsPlayerTurn(false);
         console.log('Player moved')
         incrementRound();
-        if (!playerClickSound.paused) {
-            playerClickSound.pause();
-            playerClickSound.currentTime = 0;
-        }
-        playerClickSound.play();
+        loadEnabledSound().then((audioEnabled) => {
+            if (audioEnabled == 'true') {
+                if (!playerClickSound.paused) {
+                    playerClickSound.pause();
+                    playerClickSound.currentTime = 0;
+                }
+                playerClickSound.play();
+            }
+        });
     }
     const canPlayerClick = (rowIndex: number, colIndex: number): boolean => {
         if (checkIfGameEnded(grid) !== 'Progress') {
@@ -89,7 +97,17 @@ const GameGrid: React.FC<GameGridProps> = ({
                             }
                             setCellValue(row, col, 'O'); // Ensure setCellValue is designed to manage state properly
                             setIsPlayerTurn(true);
-                            aiClickSound.play();
+                            loadEnabledSound().then((audioEnabled) => {
+                                if (audioEnabled == 'true') {
+                                    if (!aiClickSound.paused) {
+                                        aiClickSound.pause();
+                                        aiClickSound.currentTime = 0;
+                                    }
+                                    console.log('audioEnabled', audioEnabled)
+                                    console.log('AUDIO ENABLED');
+                                    aiClickSound.play();
+                                }
+                            });
                             incrementRound();
                         }
                     } else {

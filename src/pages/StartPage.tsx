@@ -46,6 +46,9 @@ const StartPage: React.FC = () => {
     const incrementRound = (): void => {
         setRound(prevRound => prevRound + 1);
     };
+    const loadEnabledSound = async () => {
+        return await db.getSetting('audioEnabled') || true;
+    }
     const resetGame = (): void => {
         setRound(1);
         setShowModal(false);
@@ -79,7 +82,15 @@ const StartPage: React.FC = () => {
             setGameEnded(true); // Set the game as ended
             updateWinCells(grid); // Update the win cells
             if (state === 'Win' || state === 'Draw') {
-                applauseSound.play();
+                loadEnabledSound().then((audioEnabled) => {
+                    if (audioEnabled == 'true') {
+                        if (!applauseSound.paused) {
+                            applauseSound.pause();
+                            applauseSound.currentTime = 0;
+                        }
+                        applauseSound.play();
+                    }
+                });
             }
         });
     };
