@@ -24,7 +24,23 @@ Tic Tac Toe is a classic strategy game where two players take turns marking a sp
   - Toggle dark mode.
   
 - **Highscores**: View the high scores of previous games, including the number of rounds won or lost and the dates.
-- **Game Statistics**: Analyze your game performance with detailed statistics and graphical representations of your wins, losses, and draws over a specific period.
+- **Game Statistics**: Analyze your game performance with detailed statistics and graphical representations of your wins, losses, and draws over last 7 days.
+
+## Algorithms & Stack
+
+- **Parallel Monte Carlo Algorithm using web workers**
+- **Typescript**
+- **React with Ionic**
+- **Capacitor**
+- **IndexedDB**
+
+## How to run
+```
+ionic build
+ionic copy
+ionic cap open android/ios
+ionic cap run android/ios
+```
 
 ## Screenshots
 
@@ -74,26 +90,3 @@ Tic Tac Toe is a classic strategy game where two players take turns marking a sp
 
 </p>
 </details>
-
-## How to Play
-
-1. **Start the Game**: From the main menu, tap on 'START GAME' to begin.
-2. **Make Your Move**: Players take turns to place their marks ('X' or 'O') on the 10x10 grid.
-3. **Win the Game**: Align five of your marks in a row horizontally, vertically, or diagonally to win.
-4. **Game Over**: The game ends when one player wins or when all spaces are filled without a winner, resulting in a draw.
-
-## Technical Implementations
-
-- **Parallel Monte Carlo Algorithm using web workers**
-- **Typescript**
-- **React with Ionic**
-- **Capacitor**
-- **IndexedDB**
-
-## How to run
-```
-ionic build
-ionic copy
-ionic cap open android/ios
-ionic cap run android/ios
-```
