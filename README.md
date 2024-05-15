@@ -84,7 +84,7 @@ Tic Tac Toe is a classic strategy game where two players take turns marking a sp
 
 ## Technical Implementations
 
-- **Parallel Monte Carlo Algorithm**
+- **Parallel Monte Carlo Algorithm using web workers**
 - **Typescript**
 - **React with Ionic**
 - **Capacitor**
