@@ -32,7 +32,7 @@ Tic Tac Toe is a classic strategy game where two players take turns marking a sp
 <p>
 <details>
 
-![Main Menu]![Screenshot from 2024-05-14 22-58-37](https://github.com/Empatixx/tamz-project/assets/26182195/e2df2e78-6af2-4e2d-8041-7fa06b4df3c1)
+![Screenshot from 2024-05-14 22-58-37](https://github.com/Empatixx/tamz-project/assets/26182195/e2df2e78-6af2-4e2d-8041-7fa06b4df3c1)
 
 </p>
 </details>
@@ -42,7 +42,7 @@ Tic Tac Toe is a classic strategy game where two players take turns marking a sp
 <p>
 <details>
 
-![Settings]![Screenshot from 2024-05-14 22-58-51](https://github.com/Empatixx/tamz-project/assets/26182195/c0301aed-7db8-4f72-bc3f-e3ef6849e28c)
+![Screenshot from 2024-05-14 22-58-51](https://github.com/Empatixx/tamz-project/assets/26182195/c0301aed-7db8-4f72-bc3f-e3ef6849e28c)
 
 </p>
 </details>
@@ -51,7 +51,7 @@ Tic Tac Toe is a classic strategy game where two players take turns marking a sp
 <p>
 <details>
 
-![Highscore]![Screenshot from 2024-05-14 22-59-03](https://github.com/Empatixx/tamz-project/assets/26182195/9bdcc107-ba8d-4b4c-9c27-ab42c519bfc6)
+![Screenshot from 2024-05-14 22-59-03](https://github.com/Empatixx/tamz-project/assets/26182195/9bdcc107-ba8d-4b4c-9c27-ab42c519bfc6)
 
 </p>
 </details>
@@ -61,7 +61,7 @@ Tic Tac Toe is a classic strategy game where two players take turns marking a sp
 <p>
 <details>
 
-![Game Statistics]![Screenshot from 2024-05-14 22-59-10](https://github.com/Empatixx/tamz-project/assets/26182195/87e05b8a-0738-4878-a0e4-a6c80ab3c673)
+![Screenshot from 2024-05-14 22-59-10](https://github.com/Empatixx/tamz-project/assets/26182195/87e05b8a-0738-4878-a0e4-a6c80ab3c673)
 
 </p>
 </details>
@@ -70,7 +70,7 @@ Tic Tac Toe is a classic strategy game where two players take turns marking a sp
 <p>
 <details>
 
-![In-Game]![Screenshot from 2024-05-14 22-59-36](https://github.com/Empatixx/tamz-project/assets/26182195/d79991c3-2d84-4a94-bdf3-35dbc8317a94)
+![Screenshot from 2024-05-14 22-59-36](https://github.com/Empatixx/tamz-project/assets/26182195/d79991c3-2d84-4a94-bdf3-35dbc8317a94)
 
 </p>
 </details>
@@ -91,7 +91,8 @@ Tic Tac Toe is a classic strategy game where two players take turns marking a sp
 - **IndexedDB**
 
 ## How to run
-```ionic build
+```
+ionic build
 ionic copy
 ionic cap open android/ios
 ionic cap run android/ios
